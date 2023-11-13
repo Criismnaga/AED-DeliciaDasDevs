@@ -4,18 +4,27 @@
 
 typedef struct Arv1{
   int id;
+  char quest[256];
+  int correct_answ;
+  int points;
   struct Arv1 *esq;
   struct Arv1 *dir;
 }Arv1;
 
 typedef struct Arv2{
   int id;
+  char quest[256];
+  int correct_answ;
+  int points;
   struct Arv2 *esq;
   struct Arv2 *dir;
 }Arv2;
 
 typedef struct Arv3{
   int id;
+  char quest[256];
+  int correct_answ;
+  int points;
   struct Arv3 *esq;
   struct Arv3 *dir;
 }Arv3;
