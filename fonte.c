@@ -2,94 +2,155 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct no {
-  char pergunta[100];
-  char resposta_correta[100];
-  char resposta_errada1[100];
+typedef struct Arv1{
+  int id;
+  struct Arv1 *esq;
+  struct Arv1 *dir;
+}Arv1;
+
+typedef struct Arv2{
+  int id;
+  struct Arv2 *esq;
+  struct Arv2 *dir;
+}Arv2;
+
+typedef struct Arv3{
+  int id;
+  struct Arv3 *esq;
+  struct Arv3 *dir;
+}Arv3;
+
+typedef struct User{
+  int idUser; //ou str idUser;
   int pontuacao;
-  struct no *esquerdo;
-  struct no *direito;
-};
+}User;
 
-struct fase {
-  int numero;
-  int quantidade_perguntas;
-  struct no *perguntas;
-  struct fase *proxima_fase;
-};
+void insert_level1(Arv1 **t1, int num);
+void insert_level2(Arv2 **t2, int num);
+void insert_level3(Arv3 **t3, int num);
 
-struct fase *fase_inicial; //= criar_fase(1, 10, NULL, NULL);
-//struct fase *fase_intermediaria = criar_fase(2, 20, NULL, NULL);
-//struct fase *fase_final = criar_fase(3, 30, NULL, NULL);
+int main(){
+  Arv1 *t1 = NULL;
+  Arv2 *t2 = NULL;
+  Arv3 *t3 = NULL;
 
-struct no *criar_no(char *pergunta, char *resposta_correta, char *resposta_errada1) {
-  struct no *novo = malloc(sizeof(struct no));
-  strcpy(novo->pergunta, pergunta);
-  strcpy(novo->resposta_correta, resposta_correta);
-  strcpy(novo->resposta_errada1, resposta_errada1);
-  novo->esquerdo = NULL;
-  novo->direito = NULL;
-  return novo;
-}
+  insert_level1(&t1, 10);
+  insert_level1(&t1, 12);
+  insert_level1(&t1, 8);
+  insert_level1(&t1, 9);
+  insert_level1(&t1, 6);
+  insert_level1(&t1, 5);
+  insert_level1(&t1, 7);
+  //até aqui montei todo o lado A da arvore 1
+  insert_level1(&t1, 11);
+  insert_level1(&t1, 20);
+  insert_level1(&t1, 18);
+  insert_level1(&t1, 21);
+  insert_level1(&t1, 15);
+  insert_level1(&t1, 19);
+  insert_level1(&t1, 14);
+  insert_level1(&t1, 17);
+  insert_level1(&t1, 16);
+  //até aqui montei todo o lado B da arvore 1
 
-struct no *inserir_no(struct no *raiz, char *pergunta, char *resposta_correta, char *resposta_errada1) {
-  if (raiz == NULL) {
-    return criar_no(pergunta, resposta_correta, resposta_errada1);
-  } else if (strcmp(pergunta, raiz->pergunta) < 0) {
-    raiz->esquerdo = inserir_no(raiz->esquerdo, pergunta, resposta_correta, resposta_errada1);
-  } else {
-    raiz->direito = inserir_no(raiz->direito, pergunta, resposta_correta, resposta_errada1);
-  }
-  return raiz;
-}
+  insert_level2(&t2, 40);
+  insert_level2(&t2, 38);
+  insert_level2(&t2, 50);
+  insert_level2(&t2, 28);
+  insert_level2(&t2, 39);
+  insert_level2(&t2, 27);
+  insert_level2(&t2, 30);
+  insert_level2(&t2, 29);
+  insert_level2(&t2, 35);
+  insert_level2(&t2, 34);
+  insert_level2(&t2, 36);
+  insert_level2(&t2, 33);
+  //até aqui montei todo o lado A da arvore 2
+  insert_level2(&t2, 49);
+  insert_level2(&t2, 52);
+  insert_level2(&t2, 51);
+  insert_level2(&t2, 59);
+  insert_level2(&t2, 56);
+  insert_level2(&t2, 60);
+  insert_level2(&t2, 54);
+  insert_level2(&t2, 57);
+  insert_level2(&t2, 55);
+  //até aqui montei todo o lado B da arvore 2
 
-int main() {
-    struct fase *fase_atual = fase_inicial;
-    //struct jogador jogador;
-
-    // Inicia o jogo na fase inicial
-    while (fase_atual != NULL) {
-        // Gera uma pergunta da fase atual
-        struct no *no = gerar_pergunta_aleatoria(fase_atual);
-
-        // Recebe a resposta do jogador
-        char resposta[100];
-        printf("%s\n", no->pergunta);
-        scanf("%s", resposta);
-
-        // Verifica a resposta do jogador
-        if (strcmp(resposta, no->resposta_correta) == 0) {
-            printf("A resposta está correta!\n");
-        } else {
-            printf("A resposta está incorreta. A resposta correta é: %s\n", no->resposta_correta);
-        break;
-    }
-
-    // Atualiza a fase atual
-    //fase_atual = no->proxima_fase;
-
-    // Exibe a pontuação do jogador
-    //printf("Sua pontuação é: %d\n", jogador.pontuacao);
-  }
+  insert_level3(&t3, 30);
+  insert_level3(&t3, 10);
+  insert_level3(&t3, 32);
+  insert_level3(&t3, 9);
+  insert_level3(&t3, 12);
+  insert_level3(&t3, 11);
+  insert_level3(&t3, 14);
+  insert_level3(&t3, 13);
+  insert_level3(&t3, 16);
+  insert_level3(&t3, 15);
+  insert_level3(&t3, 18);
+  insert_level3(&t3, 17);
+  //até aqui montei todo o lado A da arvore 3
+  insert_level3(&t3, 31);
+  insert_level3(&t3, 34);
+  insert_level3(&t3, 33);
+  insert_level3(&t3, 36);
+  insert_level3(&t3, 35);
+  insert_level3(&t3, 38);
+  insert_level3(&t3, 37);
+  insert_level3(&t3, 40);
+  insert_level3(&t3, 39);
+  //até aqui montei todo o lado B da arvore 3
 
   return 0;
 }
 
-struct no *gerar_pergunta_aleatoria(struct fase *fase) {
-  if (fase == NULL) {
-    return NULL;
+void insert_level1(Arv1 **t1, int n)
+{
+  if (*t1 == NULL) {
+    *t1 = (Arv1 *)malloc(sizeof(Arv1));
+    (*t1)->esq = NULL;
+    (*t1)->dir = NULL;
+    (*t1)->id = n;
+  } else {
+    if (n < (*t1)->id) {
+      inserir(&(*t1)->esq, n);
+    }
+    if (n > (*t1)->id) {
+      inserir(&(*t1)->dir, n);
+    }
   }
+}
 
-  // Gera um número aleatório entre 0 e a quantidade de perguntas da fase
-  int aleatorio = rand() % fase->quantidade_perguntas;
+void insert_level2(Arv2 **t2, int n)
+{
+  if (*t2 == NULL) {
+    *t2 = (Arv2 *)malloc(sizeof(Arv2));
+    (*t2)->esq = NULL;
+    (*t2)->dir = NULL;
+    (*t2)->id = n;
+  } else {
+    if (n < (*t2)->id) {
+      inserir(&(*t2)->esq, n);
+    }
+    if (n > (*t2)->id) {
+      inserir(&(*t2)->dir, n);
+    }
+  }
+}
 
-  // Retorna a pergunta na posição aleatória
-  //struct no *no = fase->perguntas[aleatorio];
-
-  // Atualiza a pontuação do jogador
-  //if (strcmp(resposta, no->resposta_correta) == 0) {
-    //no.pontuacao++;
-  //}
-
-  //return no;
+void insert_level3(Arv3 **t3, int n)
+{
+  if (*t3 == NULL) {
+    *t3 = (Arv3 *)malloc(sizeof(Arv3));
+    (*t3)->esq = NULL;
+    (*t3)->dir = NULL;
+    (*t3)->id = n;
+  } else {
+    if (n < (*t3)->id) {
+      inserir(&(*t3)->esq, n);
+    }
+    if (n > (*t3)->id) {
+      inserir(&(*t3)->dir, n);
+    }
+  }
 }
