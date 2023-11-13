@@ -37,6 +37,9 @@ typedef struct User{
 void insert_level1(Arv1 **t1, int n, char *quest, int answ, int points);
 void insert_level2(Arv2 **t2, int n, char *quest, int answ, int points);
 void insert_level3(Arv3 **t3, int n, char *quest, int answ, int points);
+void print_questions_inorder1(Arv1 *t1);
+void print_questions_inorder2(Arv2 *t2);
+void print_questions_inorder3(Arv3 *t3);
 
 int main(){
   Arv1 *t1 = NULL;
@@ -51,6 +54,7 @@ int main(){
   insert_level1(&t1, 5, "Peito de Peru", 1, 10);
   insert_level1(&t1, 7, "Frango Desfiado", 2, 10);
   //até aqui montei todo o lado A da arvore 1
+  
   insert_level1(&t1, 11, "Óleo de Azeite", 1, 10);
   insert_level1(&t1, 20, "Molho Pesto", 2, 10);
   insert_level1(&t1, 18, "Manjericão", 1, 10);
@@ -112,6 +116,10 @@ int main(){
   insert_level3(&t3, 40, "Montar a maçã no refratário", 1, 10);
   //até aqui montei todo o lado B da arvore 3
 
+  print_questions_inorder1(t1);
+  print_questions_inorder2(t2);
+  print_questions_inorder3(t3);
+
   return 0;
 }
 
@@ -119,18 +127,22 @@ void insert_level1(Arv1 **t1, int n, char *quest, int answ, int points)
 {
   if (*t1 == NULL) {
     *t1 = (Arv1 *)malloc(sizeof(Arv1));
-    (*t1)->esq = NULL;
-    (*t1)->dir = NULL;
-    (*t1)->id = n;
-    strcpy((*t1)->quest, quest); // Copiando a pergunta para o nó
-    (*t1)->answ = answ; // Definindo a resposta correta
-    (*t1)->points = points; // Definindo a pontuação
+    if(t1 != NULL){
+      (*t1)->esq = NULL;
+      (*t1)->dir = NULL;
+      (*t1)->id = n;
+      strncpy((*t1)->quest, quest, 100); // Copiando a pergunta para o nó
+      (*t1)->answ = answ; // Definindo a resposta correta
+      (*t1)->points = points; // Definindo a pontuação
+    }else{
+      printf("Memory allocation failed\n");
+    }
   } else {
     if (n < (*t1)->id) {
-      inserir(&(*t1)->esq, n);
+      insert_level1(&(*t1)->esq, n, quest, answ, points);
     }
     if (n > (*t1)->id) {
-      inserir(&(*t1)->dir, n);
+      insert_level1(&(*t1)->dir, n, quest, answ, points);
     }
   }
 }
@@ -139,15 +151,22 @@ void insert_level2(Arv2 **t2, int n, char *quest, int answ, int points)
 {
   if (*t2 == NULL) {
     *t2 = (Arv2 *)malloc(sizeof(Arv2));
-    (*t2)->esq = NULL;
-    (*t2)->dir = NULL;
-    (*t2)->id = n;
+    if(t2 != NULL){
+      (*t2)->esq = NULL;
+      (*t2)->dir = NULL;
+      (*t2)->id = n;
+      strncpy((*t2)->quest, quest, 100); // Copiando a pergunta para o nó
+      (*t2)->answ = answ; // Definindo a resposta correta
+      (*t2)->points = points; // Definindo a pontuação
+    }else{
+      printf("Memory allocation failed\n");
+    }
   } else {
     if (n < (*t2)->id) {
-      inserir(&(*t2)->esq, n);
+      insert_level2(&(*t2)->esq, n, quest, answ, points);
     }
     if (n > (*t2)->id) {
-      inserir(&(*t2)->dir, n);
+      insert_level2(&(*t2)->dir, n, quest, answ, points);
     }
   }
 }
@@ -156,15 +175,47 @@ void insert_level3(Arv3 **t3, int n, char *quest, int answ, int points)
 {
   if (*t3 == NULL) {
     *t3 = (Arv3 *)malloc(sizeof(Arv3));
-    (*t3)->esq = NULL;
-    (*t3)->dir = NULL;
-    (*t3)->id = n;
+    if(t3 != NULL){
+      (*t3)->esq = NULL;
+      (*t3)->dir = NULL;
+      (*t3)->id = n;
+      strncpy((*t3)->quest, quest, 100); // Copiando a pergunta para o nó
+      (*t3)->answ = answ; // Definindo a resposta correta
+      (*t3)->points = points; // Definindo a pontuação
+    }else{
+      printf("Memory allocation failed\n");
+    }
   } else {
     if (n < (*t3)->id) {
-      inserir(&(*t3)->esq, n);
+      insert_level3(&(*t3)->esq, n, quest, answ, points);
     }
     if (n > (*t3)->id) {
-      inserir(&(*t3)->dir, n);
+      insert_level3(&(*t3)->dir, n, quest, answ, points);
     }
+  }
+}
+
+void print_questions_inorder1(Arv1 *t1) {
+  if (t1 != NULL){
+    print_questions_inorder1(t1->esq); // Visita a subárvore esquerda
+    printf("ID: %d, Pergunta: %s\n", t1->id, t1->quest); // Imprime a pergunta do nó atual
+    print_questions_inorder1(t1->dir); // Visita a subárvore direita
+  }
+}
+
+void print_questions_inorder2(Arv2 *t2) {
+  if (t2 != NULL){
+    print_questions_inorder2(t2->esq); // Visita a subárvore esquerda
+    printf("ID: %d, Pergunta: %s\n", t2->id, t2->quest); // Imprime a pergunta do nó atual
+    print_questions_inorder2(t2->dir); // Visita a subárvore direita
+  }
+}
+
+void print_questions_inorder3(Arv3 *t3) {
+  if (t3 != NULL){
+    print_questions_inorder3(t3->esq); // Visita a subárvore esquerda
+    printf("ID: %d, Pergunta: %s\n", t3->id, t3->quest); // Imprime a pergunta do nó atual
+    print_questions_inorder3(t3->dir); // Visita a subárvore direita
+
   }
 }
