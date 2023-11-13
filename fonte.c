@@ -47,6 +47,7 @@ int main(){
   Arv3 *t3 = NULL;
 
   insert_level1(&t1, 10, "Tomate", 1, 10);
+  print_questions_inorder1(t1);
   insert_level1(&t1, 12, "Queijo Mussarela", 1, 10);
   insert_level1(&t1, 8, "Burrata", 2, 10);
   insert_level1(&t1, 6, "Óleo de Azeite", 1, 10);
@@ -67,6 +68,7 @@ int main(){
   //até aqui montei todo o lado B da arvore 1
 
   insert_level2(&t2, 40, "Peito de Frango", 2, 10);
+  print_questions_inorder2(t2);
   insert_level2(&t2, 38, "Molho Teriaky", 1, 10);
   insert_level2(&t2, 50, "Molho de Tomate", 2, 10);
   insert_level2(&t2, 28, "Gengibre", 1, 10);
@@ -92,6 +94,7 @@ int main(){
   //até aqui montei todo o lado B da arvore 2
 
   insert_level3(&t3, 30, "Maçã", 3, 10);
+  print_questions_inorder3(t3);
   insert_level3(&t3, 10, "Massa Folhada", 1, 10);
   insert_level3(&t3, 32, "Aveia em Flocos", 2, 10);
   insert_level3(&t3, 9, "Gengibre", 1, -10);
@@ -116,9 +119,10 @@ int main(){
   insert_level3(&t3, 40, "Montar a maçã no refratário", 1, 10);
   //até aqui montei todo o lado B da arvore 3
 
-  print_questions_inorder1(t1);
-  print_questions_inorder2(t2);
-  print_questions_inorder3(t3);
+  //se chamar as funções aqui ele percorre corrido, toda as árvores
+  //print_questions_inorder1(t1);
+  //print_questions_inorder2(t2);
+  //print_questions_inorder3(t3);
 
   return 0;
 }
