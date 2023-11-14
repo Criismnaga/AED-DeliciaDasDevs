@@ -5,6 +5,7 @@
 #define MAX_CHAR 256
 #define DEFAULT_QUESTION "\nEscolha seu proximo passo: "
 
+
 typedef struct BinaryTree{
   int id;
   char quest[MAX_CHAR];
@@ -20,15 +21,20 @@ typedef struct User{
   int score;
 }User;
 
+BinaryTree *temp; // variavel global para ajudar na função de search 
+
 void insert_level(BinaryTree **tree, int n, char *quest, char *step, int answ, int points);
 void print_questions_inorder(BinaryTree *tree);
 int binary_tree_search(BinaryTree *tree, int n);
+int scoreSum(int score, BinaryTree *tree);
+BinaryTree* levelSearch(BinaryTree *tree, BinaryTree *temp, int score);
 
 int main(){
   BinaryTree *t1 = NULL;
   BinaryTree *t2 = NULL;
   BinaryTree *t3 = NULL;
   int input = 100;
+  int score;
 
   insert_level(&t1, 10, DEFAULT_QUESTION, "Tomate", 1, 10);
   //print_questions_inorder(t1);
@@ -39,7 +45,7 @@ int main(){
   insert_level(&t1, 5, DEFAULT_QUESTION, "Peito de Peru", 1, 10);
   insert_level(&t1, 7, DEFAULT_QUESTION, "Frango Desfiado", 2, 10);
   //até aqui montei todo o lado A da arvore 1
-  
+
   insert_level(&t1, 11, DEFAULT_QUESTION, "Óleo de Azeite", 1, 10);
   insert_level(&t1, 20, DEFAULT_QUESTION, "Molho Pesto", 2, 10);
   insert_level(&t1, 18, DEFAULT_QUESTION, "Manjericão", 1, 10);
@@ -65,7 +71,7 @@ int main(){
   insert_level(&t2, 36, DEFAULT_QUESTION, "Churrasqueira", 2, -10);
   insert_level(&t2, 33, DEFAULT_QUESTION, "Polvilhar o gergelim", 2, 10);
   //até aqui montei todo o lado A da arvore 2
-  
+
   insert_level(&t2, 49, DEFAULT_QUESTION, "Tofu", 1, -10);
   insert_level(&t2, 52, DEFAULT_QUESTION, "Queijo Mussarela", 2, 10);
   insert_level(&t2, 51, DEFAULT_QUESTION, "Chia", 1, -10);
@@ -91,7 +97,7 @@ int main(){
   insert_level(&t3, 18, DEFAULT_QUESTION, "Forno", 2, 10);
   insert_level(&t3, 17, DEFAULT_QUESTION, "Polvilhar com açúcar", 1, 10);
   //até aqui montei todo o lado A da arvore 3
-  
+
   insert_level(&t3, 31, DEFAULT_QUESTION, "Essência de Baunilha", 1, -10);
   insert_level(&t3, 35, DEFAULT_QUESTION, "Canela em pó", 2, 10);
   insert_level(&t3, 34, DEFAULT_QUESTION, "Açúcar Mascavo", 1, 10);
@@ -118,13 +124,13 @@ int main(){
   while (1) {
     scanf("%d", &input);
     if (input == 1){
-      printf("vai pra t1");
+      levelSearch(t1, temp, score);
       break;
     }else if(input == 2){
-      printf("vai pra t2");
+      levelSearch(t2, temp, score);
       break;
     }else if(input == 3){
-      printf("vai pra t3");
+      levelSearch(t3, temp, score);
       break;
 
     }else if (input == 0){
@@ -134,7 +140,7 @@ int main(){
       printf("Número inválido. Tente novamente.\n");
     }
   } 
- 
+
 
   //se chamar as funções aqui ele percorre corrido, toda as árvores
   //print_questions_inorder(t1);
@@ -188,4 +194,46 @@ int binary_tree_search(BinaryTree *tree, int n) {
     binary_tree_search(tree->left, n);
   else
     binary_tree_search(tree->right, n);
+}
+int scoreSum(int score, BinaryTree *tree){
+  return score + tree->points;
+}
+
+BinaryTree* levelSearch(BinaryTree *tree, BinaryTree *temp, int score){
+  if (tree->left == NULL && tree->right == NULL && tree->points > 0){
+    return tree; // condição de parada 
+  } else if (tree->left == NULL && tree->right == NULL && tree->points < 0){
+    scoreSum(score, tree);
+    return levelSearch(temp, temp, score); // deu errado esse temp  kakaka 
+  }else{
+    BinaryTree *aux;
+    int input = 100; // valor arbritario pq a saida é 0
+    scoreSum(score, tree);
+
+    printf("%s\n", tree->quest);
+    printf("1- %s\n", tree->left->step);
+    printf("2- %s\n", tree->right->step);
+    
+    while (1) {
+      scanf("%d", &input);
+      if (input == 1){
+        aux = tree->left;
+        temp = tree->right;
+        return levelSearch(aux, temp, score);
+               
+      }else if(input == 2){
+        aux = tree->right;
+        temp = tree->left;
+        return levelSearch(aux, temp, score);
+      }else if (input == 0){
+        printf("Jogo encerrado"); // pode ter uma pergunta de confirmação
+        break; // talvez um go to aqui pra redirecionar pro menu
+      }else{
+        printf("Número inválido. Tente novamente.\n");
+      }
+    } 
+    
+    
+  }
+  
 }
