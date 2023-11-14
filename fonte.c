@@ -185,7 +185,7 @@ int binary_tree_search(BinaryTree *tree, int n) {
     printf("%s",tree->step);
     return tree->id;
   if (n < tree->id)
-    busca(tree->left, n);
+    binary_tree_search(tree->left, n);
   else
-    busca(tree->right, n);
+    binary_tree_search(tree->right, n);
 }
