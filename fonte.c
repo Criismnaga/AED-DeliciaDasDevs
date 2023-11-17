@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_CHAR 256
+#define MAX_CHAR 255
 #define DEFAULT_QUESTION "\nEscolha seu proximo passo: "
 
 
@@ -123,6 +123,7 @@ int main(){
 
   while (1) {
     scanf("%d", &input);
+    temp = 0;
     if (input == 1){
       levelSearch(t1, temp, score);
       break;
@@ -140,13 +141,6 @@ int main(){
       printf("Número inválido. Tente novamente.\n");
     }
   } 
-
-
-  //se chamar as funções aqui ele percorre corrido, toda as árvores
-  //print_questions_inorder(t1);
-  //print_questions_inorder2(t2);
-  //print_questions_inorder3(t3);
-
   return 0;
 }
 
@@ -227,12 +221,12 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree *temp, int score){
         return levelSearch(aux, temp, score);
       }else if (input == 0){
         printf("Jogo encerrado"); // pode ter uma pergunta de confirmação
-        break; // talvez um go to aqui pra redirecionar pro menu
+        return NULL; // talvez um go to aqui pra redirecionar pro menu
       }else{
         printf("Número inválido. Tente novamente.\n");
+        return NULL;
       }
     } 
-    
     
   }
   
