@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_CHAR 255
 #define DEFAULT_QUESTION "\nEscolha seu proximo passo: "
@@ -35,6 +36,15 @@ int main(){
   BinaryTree *t3 = NULL;
   int input = 100;
   int score = 0;
+  int flagQ1 = 1;
+  int flagQ2 = 1;
+  int flagQ3 = 1;
+  int flagMenuJogo = 1;
+  int q1Score = 0;
+  int q2Score = 0;
+  int q3Score = 0;
+  int totalScore =0; 
+
 
   //////////////////////////// 
   insert_level(&t1, 20, DEFAULT_QUESTION, "Tomate", 1, 10);
@@ -118,35 +128,70 @@ int main(){
 
   ////////////////////// GAME BEGINS /////////////////////
   printf("\n\n");
-  printf("Seja bem-vindo ao jogo Delícia das Devs\n\n");
+  printf("Seja bem-vindo ao jogo Delícia das Devs");
 
-  printf("Por qual ingrediente que deseja começar?\n");
-  printf("1- ");
-  binary_tree_search(t1, 20);
-  printf("\n2- ");
-  binary_tree_search(t2, 40);
-  printf("\n3- ");
-  binary_tree_search(t3, 30);
-  printf("\n\nDigite o numero correspondente a sua escolha: ");
+  while (flagMenuJogo == 1) {
+    if (flagQ1 == 1 || flagQ2 == 1 || flagQ3 == 1 ){
+      printf("\n\nPor qual ingrediente que deseja começar?\n");
+      if (flagQ1 == 1){
+        printf("1- ");
+        binary_tree_search(t1, 20);
+      }
+      if (flagQ2 == 1){
+        printf("\n2- ");
+        binary_tree_search(t2, 40);
+      }
+      if (flagQ3 == 1){
+        printf("\n3- ");
+        binary_tree_search(t3, 30);
+      }
+    else{// terminu todos os niveis
+      printf("\nParabéns vc terminou todas as fases do jogo!\nSua melhor pontuação em cada nível é:");
+      // função de ordenar os niveis
+      //perguntar para voltar ao menu, 
+      // no menu se apertar pra jogar tem que inicializar flagQ1, flagQ2, flagQ3, flagMenuJogo, para 1 
+      totalScore = q1Score + q2Score +q3Score;
+      printf("\n%d pontos\n\n\n", totalScore);
+      sleep(5000);
+      flagMenuJogo=0;// por enquanto volta ao menu depois de 5 segundos
+    }
 
-  while (1) {
+  }
+  if (flagQ1 == 1 || flagQ2 == 1 || flagQ3 == 1 ){
+    printf("\n\nDigite o numero correspondente a sua escolha: ");
     scanf("%d", &input);
-    if (input == 1){
+  }
+
+    if (input == 1 && flagQ1 == 1){
       levelSearch(t1, temp, &score);
-      printf("Seu score é: %d", score);
-      break;
-    }else if(input == 2){
+      printf("Seu score na fase de Pratos de Entradas é: %d pontos\n", score);
+      q1Score = score;
+      score = 0; 
+      if (q1Score >= 50){
+        flagQ1 = 0;
+      }
+
+    }else if(input == 2 && flagQ2 == 1){
       levelSearch(t2, temp, &score);
-      printf("Seu score é: %d", score);
-      break;
-    }else if(input == 3){
+      printf("Seu score na fase de Pratos Principais é: %d pontos\n", score);
+      q2Score = score;
+      score = 0; 
+      if (q2Score >= 50){
+        flagQ2 = 0;
+      }
+
+    }else if(input == 3 && flagQ3 == 1){
       levelSearch(t3, temp, &score);
-      printf("Seu score é: %d", score);
-      break;
+      printf("Seu score na fase de Sobremesa é: %d pontos\n", score);
+      q3Score = score;
+      score = 0; 
+      if (q3Score >= 50){
+        flagQ3 = 0;
+      }
 
     }else if (input == 0){
-      printf("Jogo encerrado"); // pode ter uma pergunta de confirmação
-      break;
+      printf("Jogo encerrado, Voltando ao menu principal"); // pode ter uma pergunta de confirmação
+      flagMenuJogo = 0;
     }else{
       printf("Número inválido. Tente novamente.\n");
     }
@@ -154,8 +199,7 @@ int main(){
   return 0;
 }
 
-void insert_level(BinaryTree **tree, int n, char *quest, char *step, int answ, int points)
-{
+void insert_level(BinaryTree **tree, int n, char *quest, char *step, int answ, int points){
   if (*tree == NULL) {
     *tree = (BinaryTree *)malloc(sizeof(BinaryTree));
     if(tree != NULL){
@@ -206,33 +250,32 @@ void scoreSum(int *score, BinaryTree *tree){
 
 BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
   if (tree->left == NULL && tree->right == NULL && tree->points < 0){
-    printf("oi, entrou no else points < 0\n");
+    //printf("oi, entrou no else points < 0\n");
     scoreSum(score, tree);
     return levelSearch(temp, temp, score); // deu errado esse temp  kakaka 
   }else{
     BinaryTree *aux;
     int input = 100; // valor arbritario pq a saida é 0
     scoreSum(score, tree);
-    printf("oi, entrou no ultiimooo else\n");
+    //printf("oi, entrou no ultiimooo else\n");
      
 
     while (1) {
-      
-
+    
       if (tree->left != NULL) {
         if(tree->left->answ !=3){ // identifica se é o nó que o step é a receita final
           printf("%s\n", tree->quest);
           printf("1- %s\n", tree->left->step);
         }else if (tree->left->answ ==3){
           if(*score>=50){ // ganhou
-            printf("score: %d\n", *score);
-            printf("%s\n", tree->left->step);
+            //printf("score: %d\n", *score);
+            printf("\n%s\n", tree->left->step);
           }else{ // perdeu
-            printf("score: %d\n", *score);
-            printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
+            //printf("score: %d\n", *score);
+            printf("\nNão foi dessa vez! Você não acertou a receita, tente novamente\n");
           }
         } else {
-          printf("entrei num lugar errado, linha 235\n");
+          printf("\nentrei num lugar errado, linha 235\n");
         }
       } else {
           return NULL;
@@ -243,11 +286,11 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
           printf("2- %s\n", tree->right->step);
         }else if (tree->right->answ ==3){
           if(*score>=50){ // ganhou
-            printf("score: %d", *score);
+            //printf("score: %d", *score);
             printf("%s\n", tree->right->step);
           }else{ // perdeu
-          printf("score: %d\n", *score);
-          printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
+            //printf("score: %d\n", *score);
+            printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
           }
         } else {
           printf("entrei num lugar errado, linha 253\n");
