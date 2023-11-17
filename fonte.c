@@ -87,7 +87,7 @@ int main(){
   insert_level(&t2, 60, DEFAULT_QUESTION, "Cortar Frango em Cubos", 2, -10);
   insert_level(&t2, 54, DEFAULT_QUESTION, "Fritar o frango. Depois cobrir com molho de tomate e assar no forno", 1, 10);
   insert_level(&t2, 57, DEFAULT_QUESTION, "Cozinhar Frango na água com molho de tomate", 2, -10);
-  insert_level(&t2, 55, DEFAULT_QUESTION, "Parabéns você acertou a receita de Frango a Parmegiana", 1, 10);
+  insert_level(&t2, 53, DEFAULT_QUESTION, "Parabéns você acertou a receita de Frango a Parmegiana", 3, 10);
   //até aqui montei todo o lado B da arvore 2
 
   insert_level(&t3, 30, DEFAULT_QUESTION, "Maçã", 3, 10);
@@ -102,21 +102,22 @@ int main(){
   insert_level(&t3, 16, DEFAULT_QUESTION, "Enrolar maçã na massa", 2, 10);
   insert_level(&t3, 15, DEFAULT_QUESTION, "Fritar e quando terminar polvilhar com açucar", 1, -10);
   insert_level(&t3, 18, DEFAULT_QUESTION, "Assar no forno e quando terminar polvilhar com açucar ", 2, 10);
-  insert_level(&t3, 17, DEFAULT_QUESTION, "Parabéns você acertou a receita de Rolinhos de Maçã e Canela Assados", 1, 10);
+  insert_level(&t3, 17, DEFAULT_QUESTION, "Parabéns você acertou a receita de Rolinhos de Maçã e Canela Assados", 3, 10);
   //até aqui montei todo o lado A da arvore 3
 
   insert_level(&t3, 31, DEFAULT_QUESTION, "Essência de Baunilha", 1, -10);
-  insert_level(&t3, 35, DEFAULT_QUESTION, "Canela em pó", 2, 10);
-  insert_level(&t3, 34, DEFAULT_QUESTION, "Açúcar Mascavo", 1, 10);
-  insert_level(&t3, 36, DEFAULT_QUESTION, "Mel", 2, -10);
-  insert_level(&t3, 33, DEFAULT_QUESTION, "Untar massa", 1, 10);
-  insert_level(&t3, 38, DEFAULT_QUESTION, "Misturar todos os ingredientes", 2, -10);
-  insert_level(&t3, 37, DEFAULT_QUESTION, "Assar na airfryer e depois montar com as maçãs no refratário", 1, -10);
-  insert_level(&t3, 39, DEFAULT_QUESTION, "Colocar para assar e depois montar com as maçãs no refratário", 2, 10);
-  insert_level(&t3, 40, DEFAULT_QUESTION, "Parabéns você acertou a receita de Crumble de Maçã", 1, 10);
+  insert_level(&t3, 50, DEFAULT_QUESTION, "Canela em pó", 2, 10);
+  insert_level(&t3, 42, DEFAULT_QUESTION, "Açúcar Mascavo", 1, 10);
+  insert_level(&t3, 51, DEFAULT_QUESTION, "Mel", 2, -10);
+  insert_level(&t3, 41, DEFAULT_QUESTION, "Untar massa", 1, -10);
+  insert_level(&t3, 44, DEFAULT_QUESTION, "Misturar todos os ingredientes", 2, 10);
+  insert_level(&t3, 43, DEFAULT_QUESTION, "Assar na airfryer e depois montar com as maçãs no refratário", 1, -10);
+  insert_level(&t3, 46, DEFAULT_QUESTION, "Colocar para assar e depois montar com as maçãs no refratário", 2, 10);
+  insert_level(&t3, 45, DEFAULT_QUESTION, "Parabéns você acertou a receita de Crumble de Maçã", 3, 10);
   //até aqui montei todo o lado B da arvore 3
 
   ////////////////////// GAME BEGINS /////////////////////
+  printf("\n\n");
   printf("Seja bem-vindo ao jogo Delícia das Devs\n\n");
 
   printf("Por qual ingrediente que deseja começar?\n");
@@ -204,10 +205,7 @@ void scoreSum(int *score, BinaryTree *tree){
 }
 
 BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
-  if (tree->left == NULL && tree->right == NULL && tree->points > 0){
-    printf("Parabéns você finalizou jogo");
-    return NULL; // condição de parada 
-  } else if (tree->left == NULL && tree->right == NULL && tree->points < 0){
+  if (tree->left == NULL && tree->right == NULL && tree->points < 0){
     printf("oi, entrou no else points < 0\n");
     scoreSum(score, tree);
     return levelSearch(temp, temp, score); // deu errado esse temp  kakaka 
@@ -222,18 +220,43 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
       
 
       if (tree->left != NULL) {
+        if(tree->left->answ !=3){ // identifica se é o nó que o step é a receita final
           printf("%s\n", tree->quest);
           printf("1- %s\n", tree->left->step);
+        }else if (tree->left->answ ==3){
+          if(*score>=50){ // ganhou
+            printf("score: %d\n", *score);
+            printf("%s\n", tree->left->step);
+          }else{ // perdeu
+            printf("score: %d\n", *score);
+            printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
+          }
+        } else {
+          printf("entrei num lugar errado, linha 235\n");
+        }
       } else {
           return NULL;
       }
 
       if (tree->right != NULL) {
+        if(tree->right->answ !=3){ // identifica se é o nó que o step é a receita final
           printf("2- %s\n", tree->right->step);
+        }else if (tree->right->answ ==3){
+          if(*score>=50){ // ganhou
+            printf("score: %d", *score);
+            printf("%s\n", tree->right->step);
+          }else{ // perdeu
+          printf("score: %d\n", *score);
+          printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
+          }
+        } else {
+          printf("entrei num lugar errado, linha 253\n");
+        }
       } else {
           return NULL;
       }
 
+      printf("\nDigite o numero correspondente a sua escolha: ");
       scanf("%d", &input);
 
       if (input == 1){
