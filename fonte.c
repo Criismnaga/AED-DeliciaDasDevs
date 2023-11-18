@@ -116,7 +116,7 @@ int main(){
   insert_level(&t3, 17, DEFAULT_QUESTION, "Parabéns você acertou a receita de Rolinhos de Maçã e Canela Assados", 3, 10);
   //até aqui montei todo o lado A da arvore 3
 
-  insert_level(&t3, 31, DEFAULT_QUESTION, "Essência de Baunilha", 1, -10);
+  insert_level(&t3, 31, "\nEscolha seu proximo passo: \n Dica: Esse ingrediente vem de uma vagem(fava) =)", "Essência de Baunilha", 1, -10);
   insert_level(&t3, 50, DEFAULT_QUESTION, "Canela em pó", 2, 10);
   insert_level(&t3, 42, DEFAULT_QUESTION, "Açúcar Mascavo", 1, 10);
   insert_level(&t3, 51, DEFAULT_QUESTION, "Mel", 2, -10);
@@ -278,7 +278,7 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
     
       if (tree->left != NULL) {
         if(tree->left->answ !=3){ // identifica se é o nó que o step é a receita final
-          printf("%s\n", tree->quest);
+          printf("%s\n", tree->left->quest);
 
           printf("1- %s\n", tree->left->step);
         }else if (tree->left->answ ==3){
