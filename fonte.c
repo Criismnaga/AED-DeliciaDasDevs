@@ -128,6 +128,7 @@ int main(){
   //até aqui montei todo o lado B da arvore 3
 
   ////////////////////// GAME BEGINS /////////////////////
+  void clearScreen();
   printf("\n\n");
   printf("Seja bem-vindo ao jogo Delícia das Devs");
 
@@ -151,7 +152,7 @@ int main(){
 
     if (flagQ1 == 0 && flagQ2 == 0 && flagQ3 == 0){// terminu todos os niveis
       printf("\nParabéns vc terminou todas as fases do jogo!\nSua melhor pontuação em cada nível é:");
-      // função de ordenar os niveis
+      //função de ordenar os niveis
       //perguntar para voltar ao menu, 
       // no menu se apertar pra jogar tem que inicializar flagQ1, flagQ2, flagQ3, flagMenuJogo, para 1 
       totalScore = q1Score + q2Score +q3Score;
@@ -205,6 +206,7 @@ int main(){
       break;
     }else{
       printf("\nNúmero inválido. Tente novamente /// menu principal.\n");
+      clearScreen();
     }
   } 
   return 0;
@@ -342,6 +344,7 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
         return NULL; // talvez um go to aqui pra redirecionar pro menu
       }else{
         printf("\nNúmero inválido. Tente novamente.\n");
+        clearScreen();
       }
     } 
     
