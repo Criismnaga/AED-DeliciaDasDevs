@@ -29,6 +29,7 @@ void print_questions_inorder(BinaryTree *tree);
 int binary_tree_search(BinaryTree *tree, int n);
 void scoreSum(int *score, BinaryTree *tree);
 BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score);
+void clearScreen();
 
 int main(){
   BinaryTree *t1 = NULL;
@@ -131,6 +132,7 @@ int main(){
   printf("Seja bem-vindo ao jogo Delícia das Devs");
 
   while (flagMenuJogo == 1) {
+    
     if (flagQ1 == 1 || flagQ2 == 1 || flagQ3 == 1 ){
       printf("\n\nPor qual ingrediente que deseja começar?\n");
       if (flagQ1 == 1){
@@ -145,55 +147,64 @@ int main(){
         printf("\n3- ");
         binary_tree_search(t3, 30);
       }
-    else{// terminu todos os niveis
+    }  
+
+    if (flagQ1 == 0 && flagQ2 == 0 && flagQ3 == 0){// terminu todos os niveis
       printf("\nParabéns vc terminou todas as fases do jogo!\nSua melhor pontuação em cada nível é:");
       // função de ordenar os niveis
       //perguntar para voltar ao menu, 
       // no menu se apertar pra jogar tem que inicializar flagQ1, flagQ2, flagQ3, flagMenuJogo, para 1 
       totalScore = q1Score + q2Score +q3Score;
       printf("\n%d pontos\n\n\n", totalScore);
-      sleep(5000);
-      flagMenuJogo=0;// por enquanto volta ao menu depois de 5 segundos
+      sleep(5);// por enquanto volta ao menu depois de 5 segundos
+      flagMenuJogo=0;
+      break;
     }
 
-  }
-  if (flagQ1 == 1 || flagQ2 == 1 || flagQ3 == 1 ){
-    printf("\n\nDigite o numero correspondente a sua escolha: ");
-    scanf("%d", &input);
-  }
+    
+    if (flagQ1 == 1 || flagQ2 == 1 || flagQ3 == 1 ){
+      printf("\n\n(0- Voltar ao menu principal)\n");
+      printf("\nDigite o numero correspondente a sua escolha: ");
+      scanf("%d", &input);
+    }
 
     if (input == 1 && flagQ1 == 1){
       levelSearch(t1, temp, &score);
-      printf("Seu score na fase de Pratos de Entradas é: %d pontos\n", score);
+      printf("\nSeu score na fase de Pratos de Entradas é: %d pontos\n", score);
+      //q1Score= 50;
       q1Score = score;
       score = 0; 
+      sleep(5);
       if (q1Score >= 50){
         flagQ1 = 0;
       }
 
     }else if(input == 2 && flagQ2 == 1){
       levelSearch(t2, temp, &score);
-      printf("Seu score na fase de Pratos Principais é: %d pontos\n", score);
+      printf("\nSeu score na fase de Pratos Principais é: %d pontos\n", score);
       q2Score = score;
       score = 0; 
+      sleep(5);
       if (q2Score >= 50){
         flagQ2 = 0;
       }
 
     }else if(input == 3 && flagQ3 == 1){
       levelSearch(t3, temp, &score);
-      printf("Seu score na fase de Sobremesa é: %d pontos\n", score);
+      printf("\nSeu score na fase de Sobremesa é: %d pontos\n", score);
       q3Score = score;
       score = 0; 
+      sleep(5);
       if (q3Score >= 50){
         flagQ3 = 0;
       }
 
     }else if (input == 0){
-      printf("Jogo encerrado, Voltando ao menu principal"); // pode ter uma pergunta de confirmação
+      printf("\nJogo encerrado, Voltando ao menu principal\n"); // pode ter uma pergunta de confirmação
       flagMenuJogo = 0;
+      break;
     }else{
-      printf("Número inválido. Tente novamente.\n");
+      printf("\nNúmero inválido. Tente novamente /// menu principal.\n");
     }
   } 
   return 0;
@@ -249,6 +260,7 @@ void scoreSum(int *score, BinaryTree *tree){
 }
 
 BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
+  clearScreen();
   if (tree->left == NULL && tree->right == NULL && tree->points < 0){
     //printf("oi, entrou no else points < 0\n");
     scoreSum(score, tree);
@@ -265,14 +277,17 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
       if (tree->left != NULL) {
         if(tree->left->answ !=3){ // identifica se é o nó que o step é a receita final
           printf("%s\n", tree->quest);
+
           printf("1- %s\n", tree->left->step);
         }else if (tree->left->answ ==3){
-          if(*score>=50){ // ganhou
-            //printf("score: %d\n", *score);
+          if(*score>=50){ // ganhou nó esquerda
+            clearScreen();
             printf("\n%s\n", tree->left->step);
-          }else{ // perdeu
-            //printf("score: %d\n", *score);
+            sleep(2);
+          }else{ // perdeu nó esquerda
+            clearScreen();
             printf("\nNão foi dessa vez! Você não acertou a receita, tente novamente\n");
+            sleep(2);
           }
         } else {
           printf("\nentrei num lugar errado, linha 235\n");
@@ -284,13 +299,16 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
       if (tree->right != NULL) {
         if(tree->right->answ !=3){ // identifica se é o nó que o step é a receita final
           printf("2- %s\n", tree->right->step);
+          printf("\n(0- Voltar ao menu de Ingredientes)\n");
         }else if (tree->right->answ ==3){
-          if(*score>=50){ // ganhou
-            //printf("score: %d", *score);
+          if(*score>=50){ // ganhou nó direita
+            clearScreen();
             printf("%s\n", tree->right->step);
-          }else{ // perdeu
-            //printf("score: %d\n", *score);
+            sleep(5);
+          }else{ // perdeu nó na direit
+            clearScreen();
             printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
+            sleep(2);
           }
         } else {
           printf("entrei num lugar errado, linha 253\n");
@@ -323,10 +341,18 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
         printf("Jogo encerrado\n"); // pode ter uma pergunta de confirmação
         return NULL; // talvez um go to aqui pra redirecionar pro menu
       }else{
-        printf("Número inválido. Tente novamente.\n");
+        printf("\nNúmero inválido. Tente novamente.\n");
       }
     } 
     
   }
-  
+
+}
+
+void clearScreen() {
+    #ifdef _WIN32
+    system("cls");
+    #else
+    system("clear");
+    #endif
 }
