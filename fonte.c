@@ -140,7 +140,6 @@ int main(){
   while(input_mainHome != 'Q'){
 
     mainhome:
-    //void clear_screen();
     printf("\n   Seja bem-vindo ao jogo Delícia das Devs\n ");
     printf("\n   Acerte os ingredientes e ganhe a receita\n");
     printf("\n > Pressione S para iniciar o jogo");
@@ -168,6 +167,7 @@ int main(){
       printf("\nCaractere inválido por favor digite novamente\n");
       
     }
+    //void clear_screen();
 
     while (flagMenuJogo == 1) {
       
@@ -215,6 +215,8 @@ int main(){
         printf("\n%d pontos\n\n\n", totalScore);
         sleep(2);// por enquanto volta ao menu depois de 5 segundos
         flagMenuJogo=0;
+        while ((getchar()) != '\n');
+        input_mainHome = ' ';
         break;
       }
 
