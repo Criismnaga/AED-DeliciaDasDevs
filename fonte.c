@@ -5,6 +5,7 @@
 
 #define MAX_CHAR 255
 #define DEFAULT_QUESTION "\nEscolha seu proximo passo: "
+#define QTD_LEVELS 3
 
 
 typedef struct BinaryTree{
@@ -19,7 +20,8 @@ typedef struct BinaryTree{
 
 typedef struct User{
   int idUser; //ou str idUser;
-  int score;
+  int scoreArray[QTD_LEVELS]
+  
 }User;
 
 BinaryTree *temp; // variavel global para ajudar na função de search 
@@ -27,23 +29,23 @@ BinaryTree *temp; // variavel global para ajudar na função de search
 void insert_level(BinaryTree **tree, int n, char *quest, char *step, int answ, int points);
 void print_questions_inorder(BinaryTree *tree);
 int binary_tree_search(BinaryTree *tree, int n);
-void scoreSum(int *score, BinaryTree *tree);
-BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score);
-void clearScreen();
+void score_sum(int *score, BinaryTree *tree);
+BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score);
+void clear_screen();
+void insertion_sort_descending(int array[], int qtd_levels);
+
 
 int main(){
   BinaryTree *t1 = NULL;
   BinaryTree *t2 = NULL;
   BinaryTree *t3 = NULL;
+  User *user = (struct User *)malloc(sizeof(struct User));
   int input = 100;
   int score = 0;
   int flagQ1 = 1;
   int flagQ2 = 1;
   int flagQ3 = 1;
   int flagMenuJogo = 1;
-  int q1Score = 0;
-  int q2Score = 0;
-  int q3Score = 0;
   int totalScore =0; 
 
 
@@ -60,7 +62,7 @@ int main(){
   insert_level(&t1, 9, DEFAULT_QUESTION, "Refogar cebola com a proteina escolhida", 2, 10);
   insert_level(&t1, 10, DEFAULT_QUESTION, "Assar mistura na churrasqueira", 2, -10);
   insert_level(&t1, 8, DEFAULT_QUESTION, "Rechear os tomates  com o que foi refogado", 1, 10);
-  insert_level(&t1, 7, DEFAULT_QUESTION, "Parabéns você acertou a receita de tomate rechado", 3, 10);
+  insert_level(&t1, 7, DEFAULT_QUESTION, "Parabéns você acertou a receita de Tomate Recheado", 3, 10);
    
   //até aqui montei todo o lado A da arvore 1
 
@@ -116,7 +118,7 @@ int main(){
   insert_level(&t3, 17, DEFAULT_QUESTION, "Parabéns você acertou a receita de Rolinhos de Maçã e Canela Assados", 3, 10);
   //até aqui montei todo o lado A da arvore 3
 
-  insert_level(&t3, 31, "\nEscolha seu proximo passo: \n Dica: Esse ingrediente vem de uma vagem(fava) =)", "Essência de Baunilha", 1, -10);
+  insert_level(&t3, 31, "\nEscolha seu proximo passo: \nDica: Esse ingrediente vem de uma vagem(fava) =)", "Essência de Baunilha", 1, -10);
   insert_level(&t3, 50, DEFAULT_QUESTION, "Canela em pó", 2, 10);
   insert_level(&t3, 42, DEFAULT_QUESTION, "Açúcar Mascavo", 1, 10);
   insert_level(&t3, 51, DEFAULT_QUESTION, "Mel", 2, -10);
@@ -128,9 +130,11 @@ int main(){
   //até aqui montei todo o lado B da arvore 3
 
   ////////////////////// GAME BEGINS /////////////////////
-  void clearScreen();
+  void clear_screen();
   printf("\n\n");
   printf("Seja bem-vindo ao jogo Delícia das Devs");
+
+
 
   while (flagMenuJogo == 1) {
     
@@ -151,13 +155,32 @@ int main(){
     }  
 
     if (flagQ1 == 0 && flagQ2 == 0 && flagQ3 == 0){// terminu todos os niveis
-      printf("\nParabéns vc terminou todas as fases do jogo!\nSua melhor pontuação em cada nível é:");
-      //função de ordenar os niveis
-      //perguntar para voltar ao menu, 
-      // no menu se apertar pra jogar tem que inicializar flagQ1, flagQ2, flagQ3, flagMenuJogo, para 1 
-      totalScore = q1Score + q2Score +q3Score;
+      printf("\nParabéns vc terminou todas as fases do jogo!\nSua melhor pontuação em cada nível foi:\n");
+      char arrayLevels[][MAX_CHAR] = {"Prato de Entrada", "Prato Principal", "Sobremesa"};
+      int arrayOldScore[QTD_LEVELS];
+      int i, j;
+      
+      for (i=0; i<QTD_LEVELS; i++){
+        arrayOldScore[i] = user->scoreArray[i];
+      }
+
+      insertion_sort_descending(user->scoreArray, QTD_LEVELS);
+      
+      for(i=0; i<QTD_LEVELS; i++){
+        for(j=0; j<QTD_LEVELS; j++){
+          if (user->scoreArray[i] == arrayOldScore [j]){
+            printf("\n\t%d- Level %s: %d pontos\n", i+1, arrayLevels[j], user->scoreArray[i]);
+            arrayOldScore[j] = 0;
+          }
+        }
+      }
+      printf("\nSua pontuação total foi:");
+      for (i=0; i<QTD_LEVELS; i++){
+        totalScore = totalScore + user->scoreArray[i];
+      }
+
       printf("\n%d pontos\n\n\n", totalScore);
-      sleep(5);// por enquanto volta ao menu depois de 5 segundos
+      sleep(2);// por enquanto volta ao menu depois de 5 segundos
       flagMenuJogo=0;
       break;
     }
@@ -170,33 +193,32 @@ int main(){
     }
 
     if (input == 1 && flagQ1 == 1){
-      levelSearch(t1, temp, &score);
+      level_search(t1, temp, &score);
       printf("\nSeu score na fase de Pratos de Entradas é: %d pontos\n", score);
-      //q1Score= 50;
-      q1Score = score;
+      user->scoreArray[0] = score;
       score = 0; 
-      sleep(5);
-      if (q1Score >= 50){
+      sleep(2);
+      if (user->scoreArray[0] >= 50){
         flagQ1 = 0;
       }
 
     }else if(input == 2 && flagQ2 == 1){
-      levelSearch(t2, temp, &score);
+      level_search(t2, temp, &score);
       printf("\nSeu score na fase de Pratos Principais é: %d pontos\n", score);
-      q2Score = score;
+      user->scoreArray[1] = score;
       score = 0; 
-      sleep(5);
-      if (q2Score >= 50){
+      sleep(2);
+      if (user->scoreArray[1]  >= 50){
         flagQ2 = 0;
       }
 
     }else if(input == 3 && flagQ3 == 1){
-      levelSearch(t3, temp, &score);
+      level_search(t3, temp, &score);
       printf("\nSeu score na fase de Sobremesa é: %d pontos\n", score);
-      q3Score = score;
+      user->scoreArray[2] = 50;
       score = 0; 
-      sleep(5);
-      if (q3Score >= 50){
+      sleep(2);
+      if (user->scoreArray[2] >= 50){
         flagQ3 = 0;
       }
 
@@ -205,8 +227,8 @@ int main(){
       flagMenuJogo = 0;
       break;
     }else{
-      printf("\nNúmero inválido. Tente novamente /// menu principal.\n");
-      clearScreen();
+      printf("\nNúmero inválido. Tente novamente.\n");
+      clear_screen();
     }
   } 
   return 0;
@@ -257,20 +279,20 @@ int binary_tree_search(BinaryTree *tree, int n) {
     binary_tree_search(tree->right, n);
 }
 
-void scoreSum(int *score, BinaryTree *tree){
+void score_sum(int *score, BinaryTree *tree){
   *score += tree->points;
 }
 
-BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
-  clearScreen();
+BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
+  clear_screen();
   if (tree->left == NULL && tree->right == NULL && tree->points < 0){
     //printf("oi, entrou no else points < 0\n");
-    scoreSum(score, tree);
-    return levelSearch(temp, temp, score); // deu errado esse temp  kakaka 
+    score_sum(score, tree);
+    return level_search(temp, temp, score); // deu errado esse temp  kakaka 
   }else{
     BinaryTree *aux;
     int input = 100; // valor arbritario pq a saida é 0
-    scoreSum(score, tree);
+    score_sum(score, tree);
     //printf("oi, entrou no ultiimooo else\n");
      
 
@@ -283,11 +305,11 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
           printf("1- %s\n", tree->left->step);
         }else if (tree->left->answ ==3){
           if(*score>=50){ // ganhou nó esquerda
-            clearScreen();
+            clear_screen();
             printf("\n%s\n", tree->left->step);
             sleep(2);
           }else{ // perdeu nó esquerda
-            clearScreen();
+            clear_screen();
             printf("\nNão foi dessa vez! Você não acertou a receita, tente novamente\n");
             sleep(2);
           }
@@ -304,11 +326,11 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
           printf("\n(0- Voltar ao menu de Ingredientes)\n");
         }else if (tree->right->answ ==3){
           if(*score>=50){ // ganhou nó direita
-            clearScreen();
+            clear_screen();
             printf("%s\n", tree->right->step);
             sleep(5);
           }else{ // perdeu nó na direit
-            clearScreen();
+            clear_screen();
             printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
             sleep(2);
           }
@@ -326,7 +348,7 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
         if (tree->right != NULL) {
           aux = tree->left;
           temp = tree->right;
-          return levelSearch(aux, temp, score);
+          return level_search(aux, temp, score);
         }else{
           return NULL;
         }
@@ -335,7 +357,7 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
         if (tree->right != NULL){
             aux = tree->right;
             temp = tree->left;
-            return levelSearch(aux, temp, score);
+            return level_search(aux, temp, score);
           }else{
           return NULL;
           }
@@ -344,7 +366,7 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
         return NULL; // talvez um go to aqui pra redirecionar pro menu
       }else{
         printf("\nNúmero inválido. Tente novamente.\n");
-        clearScreen();
+        clear_screen();
       }
     } 
     
@@ -352,10 +374,23 @@ BinaryTree* levelSearch(BinaryTree *tree, BinaryTree **temp, int *score){
 
 }
 
-void clearScreen() {
+void clear_screen() {
     #ifdef _WIN32
     system("cls");
     #else
     system("clear");
     #endif
+}
+
+void insertion_sort_descending(int array[], int qtd_levels) {
+  int i, key, j;
+  for (i = 1; i < qtd_levels; i++) {
+    key = array[i];
+    j = i - 1;
+    while (j >= 0 && array[j] < key) {
+        array[j + 1] = array[j];
+        j = j - 1;
+    }
+    array[j + 1] = key;
+  }
 }
