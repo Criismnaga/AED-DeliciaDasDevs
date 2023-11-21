@@ -35,6 +35,7 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score);
 void clear_screen();
 void insertion_sort_descending(int array[], int qtd_levels);
 void free_tree(BinaryTree *tree);
+void setUtf8Encoding();
 
 
 int main(){
@@ -133,7 +134,7 @@ int main(){
   insert_level(&t3, 44, DEFAULT_QUESTION, "Misturar todos os ingredientes", 2, 10);
   insert_level(&t3, 43, DEFAULT_QUESTION"\nDICA: Não gosto de fã clubes", "Assar na airfryer e depois montar com as maçãs no refratário", 1, -10);
   insert_level(&t3, 46, DEFAULT_QUESTION, "Colocar para assar e depois montar com as maçãs no refratário", 2, 10);
-  insert_level(&t3, 45, DEFAULT_QUESTION, "Parabéns você acertou a receita de Crumble de Maçã\n\nIngredientes4 maçãs grandes - Descascadas, sem caroços e cortadas em fatias\n\t1 xícara de aveia em flocos\n\t1/2 xícara de açúcar mascavo\n\t1/2 colher de chá de canela em pó\n\nPreparo:\n\tPreaqueça o Forno: Ajuste o forno para 180°C (350°F).\n\tPrepare as Maçãs: Em um refratário, misture as fatias de maçã com metade do açúcar mascavo e a canela.\n\tFaça a Cobertura de Aveia: Em uma tigela separada, misture a aveia e o restante do açúcar mascavo.\n\tMonte o Crumble: Espalhe a mistura de aveia uniformemente sobre as maçãs no refratário.\n\tAsse: Asse no forno por cerca de 30 a 40 minutos, ou até que a cobertura esteja dourada e as maçãs estejam macias.", 3, 10);
+  insert_level(&t3, 45, DEFAULT_QUESTION, "Parabéns você acertou a receita de Crumble de Maçã\n\nIngredientes4 maçãs grandes - Descascadas, sem caroços e cortadas em fatias\n\t1 xícara de aveia em flocos\n\t1/2 xícara de açúcar mascavo\n\t1/2 colher de chá de canela em pó\n\nPreparo:\n\tPreaqueça o Forno: Ajuste o forno para 180°C .\n\tPrepare as Maçãs: Em um refratário, misture as fatias de maçã com metade do açúcar mascavo e a canela.\n\tFaça a Cobertura de Aveia: Em uma tigela separada, misture a aveia e o restante do açúcar mascavo.\n\tMonte o Crumble: Espalhe a mistura de aveia uniformemente sobre as maçãs no refratário.\n\tAsse: Asse no forno por cerca de 30 a 40 minutos, ou até que a cobertura esteja dourada e as maçãs estejam macias.", 3, 10);
   //até aqui montei todo o lado B da arvore 3
 
   ////////////////////// GAME BEGINS /////////////////////
@@ -142,9 +143,11 @@ int main(){
   //printf("Seja bem-vindo ao jogo Delícia das Devs");
   
   while(input_mainHome != 'q'){
-    clear_screen();
+	setUtf8Encoding();
+    
 
     mainhome:
+	clear_screen();
     printf("\n   Seja bem-vindo ao jogo Delícia das Devs\n ");
     printf("\n   Acerte os ingredientes e ganhe a receita\n");
     printf("\n > Pressione 's' para iniciar o jogo");
@@ -347,9 +350,9 @@ int binary_tree_search(BinaryTree *tree, int n) {
     return tree->id;
     }
   if (n < tree->id){
-    binary_tree_search(tree->left, n);
+    return binary_tree_search(tree->left, n);
   }else{
-    binary_tree_search(tree->right, n);
+    return binary_tree_search(tree->right, n);
   }
 } 
 
@@ -363,7 +366,7 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
     //printf("oi, entrou no else points < 0\n");
     score_sum(score, tree);
     
-    return level_search(temp, temp, score); // deu errado esse temp  kakaka 
+    return level_search(*temp, temp, score); // deu errado esse temp  kakaka 
   }else{
     BinaryTree *aux;
     
@@ -423,7 +426,7 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
       if (input == 1){
         if (tree->right != NULL) {
           aux = tree->left;
-          temp = tree->right;
+          temp = &tree->right;
           return level_search(aux, temp, score);
         }else{
           return NULL;
@@ -432,7 +435,7 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
       }else if(input == 2){
         if (tree->right != NULL){
             aux = tree->right;
-            temp = tree->left;
+            temp = &tree->left;
             return level_search(aux, temp, score);
           }else{
           return NULL;
@@ -475,4 +478,12 @@ void insertion_sort_descending(int array[], int qtd_levels) {
     }
     array[j + 1] = key;
   }
+}
+
+void setUtf8Encoding() {
+    #ifdef _WIN32
+    system("chcp 65001"); // Configura o código de página para UTF-8 no Windows
+    #else
+    printf("\e[1;1H\e[2J"); // Limpa a tela no Linux
+    #endif
 }
