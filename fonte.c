@@ -20,12 +20,12 @@ typedef struct BinaryTree{
 }BinaryTree;
 
 typedef struct User{
-  int idUser; //ou str idUser;
+  int idUser;
   int scoreArray[QTD_LEVELS];
   
 }User;
 
-BinaryTree *temp; // variavel global para ajudar na função de search 
+BinaryTree *temp;
 
 void insert_level(BinaryTree **tree, int n, char *quest, char *step, int answ, int points);
 void print_questions_inorder(BinaryTree *tree);
@@ -57,7 +57,7 @@ int main(){
   int i, j;
 
 
-  //////////////////////////// 
+  ///////////////Popular as arvores ///////////////
   insert_level(&t1, 20, DEFAULT_QUESTION, "Tomate", 1, 10);
   //print_questions_inorder(t1);
   insert_level(&t1, 18, DEFAULT_QUESTION, "Queijo Mussarela", 1, 10);
@@ -137,14 +137,13 @@ int main(){
   insert_level(&t3, 45, DEFAULT_QUESTION, "Parabéns você acertou a receita de Crumble de Maçã\n\nIngredientes4 maçãs grandes - Descascadas, sem caroços e cortadas em fatias\n\t1 xícara de aveia em flocos\n\t1/2 xícara de açúcar mascavo\n\t1/2 colher de chá de canela em pó\n\nPreparo:\n\tPreaqueça o Forno: Ajuste o forno para 180°C .\n\tPrepare as Maçãs: Em um refratário, misture as fatias de maçã com metade do açúcar mascavo e a canela.\n\tFaça a Cobertura de Aveia: Em uma tigela separada, misture a aveia e o restante do açúcar mascavo.\n\tMonte o Crumble: Espalhe a mistura de aveia uniformemente sobre as maçãs no refratário.\n\tAsse: Asse no forno por cerca de 30 a 40 minutos, ou até que a cobertura esteja dourada e as maçãs estejam macias.", 3, 10);
   //até aqui montei todo o lado B da arvore 3
 
+
+
   ////////////////////// GAME BEGINS /////////////////////
   
-  //printf("\n\n");
-  //printf("Seja bem-vindo ao jogo Delícia das Devs");
   
   while(input_mainHome != 'q'){
 	setUtf8Encoding();
-    
 
     mainhome:
 	clear_screen();
@@ -156,9 +155,6 @@ int main(){
     printf("\n__________________________________________________\n\n");
     scanf("%c", &input_mainHome);
     help = 1;
-    /*
-   
-    */
 
     if(input_mainHome == 's'){
       clear_screen();
@@ -215,7 +211,7 @@ int main(){
         }
 
         printf("\n%d pontos\n\n\n", totalScore);
-        sleep(2);// por enquanto volta ao menu depois de 5 segundos
+        sleep(2);
         flagMenuJogo=0;
         printf("\nDigite 0 para voltar para o menu\n");
         scanf("%d", &help);
@@ -224,7 +220,7 @@ int main(){
           input_mainHome = ' ';
           goto mainhome;
         }
-        //break;
+        
       }
 
       
@@ -249,7 +245,7 @@ int main(){
         printf("\nSeu score na fase de Pratos Principais é: %d pontos\n", score);
         user->scoreArray[1] = score;
         score = 0; 
-        sleep(2);
+        sleep(1);
         if (user->scoreArray[1]  >= 50){
           flagQ2 = 0;
         }
@@ -259,7 +255,7 @@ int main(){
         printf("\nSeu score na fase de Sobremesa é: %d pontos\n", score);
         user->scoreArray[2] = score;
         score = 0; 
-        sleep(2);
+        sleep(1);
         if (user->scoreArray[2] >= 50){
           flagQ3 = 0;
         }
@@ -278,9 +274,6 @@ int main(){
       }
     }
 
-
-    
-
     }else if(input_mainHome == 'h' && help == 1){
       clear_screen();
       printf("\nComo jogar o  Delícia das Devs:\n");
@@ -298,9 +291,7 @@ int main(){
       printf("\nCaractere inválido por favor digite novamente\n");
       
     }
-    
-    
-  
+
   }
   free_tree(t1);
   free_tree(t2);
@@ -331,7 +322,6 @@ void insert_level(BinaryTree **tree, int n, char *quest, char *step, int answ, i
     }
   }
 }
-
 
 void print_questions_inorder(BinaryTree *tree) {
   if (tree != NULL){
@@ -366,7 +356,7 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
     //printf("oi, entrou no else points < 0\n");
     score_sum(score, tree);
     
-    return level_search(*temp, temp, score); // deu errado esse temp  kakaka 
+    return level_search(*temp, temp, score);
   }else{
     BinaryTree *aux;
     
@@ -386,11 +376,11 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
           if(*score>=50){ // ganhou nó esquerda
             clear_screen();
             printf("\n%s\n", tree->left->step);
-            sleep(2);
+            sleep(1);
           }else{ // perdeu nó esquerda
             clear_screen();
             printf("\nNão foi dessa vez! Você não acertou a receita, tente novamente\n");
-            sleep(2);
+            sleep(1);
           }
         } else {
           printf("\nentrei num lugar errado, linha 235\n");
@@ -407,7 +397,7 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
           if(*score>=50){ // ganhou nó direita
             clear_screen();
             printf("%s\n", tree->right->step);
-            sleep(5);
+            sleep(2);
           }else{ // perdeu nó na direit
             clear_screen();
             printf("Não foi dessa vez! Você não acertou a receita, tente novamente\n");
