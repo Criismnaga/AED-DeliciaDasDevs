@@ -21,7 +21,7 @@ typedef struct BinaryTree{
 
 typedef struct User{
   int idUser; //ou str idUser;
-  int scoreArray[QTD_LEVELS]
+  int scoreArray[QTD_LEVELS];
   
 }User;
 
@@ -34,6 +34,7 @@ void score_sum(int *score, BinaryTree *tree);
 BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score);
 void clear_screen();
 void insertion_sort_descending(int array[], int qtd_levels);
+void free_tree(BinaryTree *tree);
 
 
 int main(){
@@ -61,7 +62,7 @@ int main(){
   insert_level(&t1, 18, DEFAULT_QUESTION, "Queijo Mussarela", 1, 10);
   insert_level(&t1, 22, DEFAULT_QUESTION, "Burrata", 2, 10);
   insert_level(&t1, 13, DEFAULT_QUESTION"\nDICA: Fui criado por soldados romanos :o", "Óleo de Azeite", 1, 10);
-  insert_level(&t1, 19, DEFAULT_QUESTION, "Óleo de GergeLim", 2, -10);
+  insert_level(&t1, 19, DEFAULT_QUESTION, "Óleo de Gergelim", 2, -10);
   insert_level(&t1, 2, DEFAULT_QUESTION"\nDICA: Minha origem é das aves", "Peito de Peru", 1, 10);
   insert_level(&t1, 17, DEFAULT_QUESTION, "Lingua de boi", 2, -10);
   insert_level(&t1, 1, DEFAULT_QUESTION"\nDICA: Sou em camadas", "Refogar maxixe com a proteina escolhida", 1, -10);
@@ -146,9 +147,9 @@ int main(){
     mainhome:
     printf("\n   Seja bem-vindo ao jogo Delícia das Devs\n ");
     printf("\n   Acerte os ingredientes e ganhe a receita\n");
-    printf("\n > Pressione S para iniciar o jogo");
-    printf("\n > Press H se precisa de ajuda");
-    printf("\n > press Q para encerrar o jogo");
+    printf("\n > Pressione 's' para iniciar o jogo");
+    printf("\n > Press 'h' se precisa de ajuda");
+    printf("\n > press 'q' para encerrar o jogo");
     printf("\n__________________________________________________\n\n");
     scanf("%c", &input_mainHome);
     help = 1;
@@ -231,7 +232,7 @@ int main(){
       }
 
       if (input == 1 && flagQ1 == 1){
-        level_search(t1, temp, &score);
+        level_search(t1, &temp, &score);
         printf("\nSeu score na fase de Pratos de Entradas é: %d pontos\n", score);
         user->scoreArray[0] = score;
         score = 0; 
@@ -241,7 +242,7 @@ int main(){
         }
 
       }else if(input == 2 && flagQ2 == 1){
-        level_search(t2, temp, &score);
+        level_search(t2, &temp, &score);
         printf("\nSeu score na fase de Pratos Principais é: %d pontos\n", score);
         user->scoreArray[1] = score;
         score = 0; 
@@ -251,7 +252,7 @@ int main(){
         }
 
       }else if(input == 3 && flagQ3 == 1){
-        level_search(t3, temp, &score);
+        level_search(t3, &temp, &score);
         printf("\nSeu score na fase de Sobremesa é: %d pontos\n", score);
         user->scoreArray[2] = score;
         score = 0; 
@@ -295,9 +296,12 @@ int main(){
       
     }
     
-
-     
+    
+  
   }
+  free_tree(t1);
+  free_tree(t2);
+  free_tree(t3);
   return 0;
 }
 
@@ -335,16 +339,19 @@ void print_questions_inorder(BinaryTree *tree) {
 }
 
 int binary_tree_search(BinaryTree *tree, int n) {
-  if (tree == (BinaryTree*)NULL)
+  if (tree == (BinaryTree*)NULL){
     return (0);
-  if (tree->id == n)
+    }
+  if (tree->id == n){
     printf("%s",tree->step);
     return tree->id;
-  if (n < tree->id)
+    }
+  if (n < tree->id){
     binary_tree_search(tree->left, n);
-  else
+  }else{
     binary_tree_search(tree->right, n);
-}
+  }
+} 
 
 void score_sum(int *score, BinaryTree *tree){
   *score += tree->points;
@@ -355,9 +362,11 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
   if (tree->left == NULL && tree->right == NULL && tree->points < 0){
     //printf("oi, entrou no else points < 0\n");
     score_sum(score, tree);
+    
     return level_search(temp, temp, score); // deu errado esse temp  kakaka 
   }else{
     BinaryTree *aux;
+    
     int input = 100; // valor arbritario pq a saida é 0
     score_sum(score, tree);
     //printf("oi, entrou no ultiimooo else\n");
@@ -438,6 +447,13 @@ BinaryTree* level_search(BinaryTree *tree, BinaryTree **temp, int *score){
     } 
     
   }
+}
+
+void free_tree(BinaryTree *tree) {
+    if (tree == NULL) return;
+    free_tree(tree->left);   
+    free_tree(tree->right);  
+    free(tree);              
 }
 
 void clear_screen() {
